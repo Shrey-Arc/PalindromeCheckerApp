@@ -1,21 +1,17 @@
 public class PalindromeCheckerApp {
 
-    public static boolean isPalindrome(String str, int start, int end) {
-        if (start >= end) {
-            return true;
-        }
+    public static String normalize(String input) {
+        if (input == null) return "";
 
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        return isPalindrome(str, start + 1, end - 1);
+        return input.toLowerCase().replaceAll("[^a-z0-9]", "");
     }
 
     public static void main(String[] args) {
-        String input = "madam";
-        boolean result = isPalindrome(input.toLowerCase(), 0, input.length() - 1);
+        String rawInput = "A man, a plan, a canal: Panama";
+        String clean = normalize(rawInput);
         
-        System.out.println("Is '" + input + "' a palindrome? " + result);
+        System.out.println("Original: " + rawInput);
+        System.out.println("Normalized: " + clean);
+        
     }
 }
