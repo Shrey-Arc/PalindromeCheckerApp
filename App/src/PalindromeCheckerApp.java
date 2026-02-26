@@ -1,31 +1,47 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
+class Node {
+    char data;
+    Node next;
+    Node(char data) { this.data = data; }
+}
 
-public class PalindromeCheckerApp {
+public class LinkedListPalindrome {
 
-    public static boolean isPalindrome(String input) {
-        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+    public static boolean isPalindrome(Node head) {
+        if (head == null || head.next == null) return true;
 
-        Deque<Character> charDeque = new ArrayDeque<>();
-
-        for (char ch : cleanInput.toCharArray()) {
-            charDeque.addLast(ch);
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
 
-        while (charDeque.size() > 1) {
-            char first = charDeque.removeFirst();
-            char last = charDeque.removeLast();
+        Node secondHalf = reverse(slow);
+        Node firstHalf = head;
 
-            if (first != last) {
-                return false;
+        Node temp = secondHalf;
+        boolean result = true;
+        while (temp != null) {
+            if (firstHalf.data != temp.data) {
+                result = false;
+                break;
             }
+            firstHalf = firstHalf.next;
+            temp = temp.next;
         }
 
-        return true;
+        return result;
     }
 
-    public static void main(String[] args) {
-        String test = "Racecar";
-        System.out.println("Is '" + test + "' a palindrome? " + isPalindrome(test));
+    private static Node reverse(Node head) {
+        Node prev = null;
+        Node current = head;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        return prev;
     }
 }
