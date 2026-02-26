@@ -1,47 +1,21 @@
-class Node {
-    char data;
-    Node next;
-    Node(char data) { this.data = data; }
-}
+public class PalindromeCheckerApp {
 
-public class LinkedListPalindrome {
-
-    public static boolean isPalindrome(Node head) {
-        if (head == null || head.next == null) return true;
-
-        Node slow = head;
-        Node fast = head;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
+    public static boolean isPalindrome(String str, int start, int end) {
+        if (start >= end) {
+            return true;
         }
 
-        Node secondHalf = reverse(slow);
-        Node firstHalf = head;
-
-        Node temp = secondHalf;
-        boolean result = true;
-        while (temp != null) {
-            if (firstHalf.data != temp.data) {
-                result = false;
-                break;
-            }
-            firstHalf = firstHalf.next;
-            temp = temp.next;
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
 
-        return result;
+        return isPalindrome(str, start + 1, end - 1);
     }
 
-    private static Node reverse(Node head) {
-        Node prev = null;
-        Node current = head;
-        while (current != null) {
-            Node nextNode = current.next;
-            current.next = prev;
-            prev = current;
-            current = nextNode;
-        }
-        return prev;
+    public static void main(String[] args) {
+        String input = "madam";
+        boolean result = isPalindrome(input.toLowerCase(), 0, input.length() - 1);
+        
+        System.out.println("Is '" + input + "' a palindrome? " + result);
     }
 }
