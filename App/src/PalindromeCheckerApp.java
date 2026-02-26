@@ -28,3 +28,15 @@ public class PalindromeChecker {
         return true;
     }
 }
+
+public class Main {
+    public static void main(String[] args) {
+        PalindromeChecker pc = new PalindromeChecker("No 'x' in Nixon");
+
+        if (pc.check()) {
+            System.out.println("It's a palindrome!");
+        } else {
+            System.out.println("Not a palindrome.");
+        }
+    }
+}
