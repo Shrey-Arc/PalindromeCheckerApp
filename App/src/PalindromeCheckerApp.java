@@ -1,64 +1,42 @@
 /** @author Shrey-Arc */
-public interface PalindromeCheckerApp {
-    boolean isPalindrome(String text);
-}
+public class PalindromePerformance {
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Stack;
+    public static void comparePerformance(String testString) {
+        String clean = testString.toLowerCase().replaceAll("[^a-z0-9]", "");
+        
+        System.out.println("Testing String Length: " + clean.length());
+        System.out.println("-------------------------------------------");
 
-// Strategy A: Using a Deque
-class DequeStrategy implements PalindromeStrategy {
-    @Override
-    public boolean isPalindrome(String text) {
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char c : text.toCharArray()) deque.addLast(c);
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) return false;
+        // 1. Test Deque Strategy
+        long startTime = System.nanoTime();
+        new DequeStrategy().isPalindrome(clean);
+        long endTime = System.nanoTime();
+        System.out.println("Deque Strategy:  " + (endTime - startTime) + " ns");
+
+        // 2. Test Stack Strategy
+        startTime = System.nanoTime();
+        new StackStrategy().isPalindrome(clean);
+        endTime = System.nanoTime();
+        System.out.println("Stack Strategy:  " + (endTime - startTime) + " ns");
+
+        // 3. Test Simple Two-Pointer (Array)
+        startTime = System.nanoTime();
+        checkSimple(clean);
+        endTime = System.nanoTime();
+        System.out.println("Simple Pointer:  " + (endTime - startTime) + " ns");
+    }
+
+    private static boolean checkSimple(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i++) != s.charAt(j--)) return false;
         }
         return true;
     }
-}
 
-// Strategy B: Using a Stack
-class StackStrategy implements PalindromeStrategy {
-    @Override
-    public boolean isPalindrome(String text) {
-        Stack<Character> stack = new Stack<>();
-        for (char c : text.toCharArray()) stack.push(c);
-        for (char c : text.toCharArray()) {
-            if (c != stack.pop()) return false;
-        }
-        return true;
-    }
-}
-
-public class PalindromeContext {
-    private PalindromeStrategy strategy;
-
-    // Inject strategy at runtime
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean executeCheck(String input) {
-        // Pre-processing (Normalization) happens here once
-        String clean = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-        return strategy.isPalindrome(clean);
-    }
-}
-
-public class Main {
     public static void main(String[] args) {
-        PalindromeContext solver = new PalindromeContext();
-        String testWord = "Racecar";
-
-        // Switch to Deque logic
-        solver.setStrategy(new DequeStrategy());
-        System.out.println("Using Deque: " + solver.executeCheck(testWord));
-
-        // Switch to Stack logic dynamically
-        solver.setStrategy(new StackStrategy());
-        System.out.println("Using Stack: " + solver.executeCheck(testWord));
+        // Test with a very long string to see a real difference
+        String longString = "a".repeat(10000) + "b" + "a".repeat(10000);
+        comparePerformance(longString);
     }
 }
